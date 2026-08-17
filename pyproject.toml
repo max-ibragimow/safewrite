@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "safewrite"
-version = "0.1.1"
+version = "0.1.2"
 description = "Atomic file writes: the content is replaced in full, or not replaced at all"
 readme = "README.md"
 requires-python = ">=3.8"
