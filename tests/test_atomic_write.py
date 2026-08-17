@@ -263,7 +263,9 @@ def test_durable_true_syncs_file_and_directory(tmp_path, monkeypatch):
     synced = []
     monkeypatch.setattr(core.os, "fsync", lambda fd: synced.append(fd))
     write_text(tmp_path / "durable.txt", "data")
-    assert len(synced) == 2, "expected an fsync of the file and an fsync of the directory"
+    # Windows has no directory fsync, so only the file itself is flushed there.
+    expected = 2 if os.name == "posix" else 1
+    assert len(synced) == expected
 
 
 def test_newline_is_respected(tmp_path):

@@ -61,7 +61,10 @@ def test_error_message_hides_the_temporary_file(tmp_path, capsys):
     assert main([str(target), "--no-clobber"], stdin=io.BytesIO(b"new")) == 2
     err = capsys.readouterr().err
     assert ".tmp" not in err
-    assert str(target) in err and "File exists" in err
+    # The path must appear verbatim: repr() would double the backslashes on Windows.
+    assert str(target) in err
+    # "File exists" on POSIX, "Cannot create a file when that file already exists" on Windows.
+    assert "exist" in err
 
 
 def test_refuses_to_truncate_with_empty_input(tmp_path, capsys):

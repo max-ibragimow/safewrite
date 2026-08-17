@@ -88,7 +88,7 @@ def main(argv: Optional[Sequence[str]] = None, stdin: Optional[BinaryIO] = None)
 
         if not payload and not args.append and not args.allow_empty and _target_size(args.file):
             print(
-                f"safewrite: refusing to truncate {args.file!r} with empty input"
+                f"safewrite: refusing to truncate '{args.file}' with empty input"
                 " (the command upstream may have failed; pass --allow-empty to force)",
                 file=sys.stderr,
             )
@@ -105,7 +105,7 @@ def main(argv: Optional[Sequence[str]] = None, stdin: Optional[BinaryIO] = None)
         )
     except OSError as exc:
         reason = exc.strerror or str(exc)
-        print(f"safewrite: cannot write {args.file!r}: {reason}", file=sys.stderr)
+        print(f"safewrite: cannot write '{args.file}': {reason}", file=sys.stderr)
         return 2
     return 0
 
