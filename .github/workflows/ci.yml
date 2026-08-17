@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: pytest ${{ matrix.python-version }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        include:
+          - os: macos-latest
+            python-version: "3.11"
+          - os: windows-latest
+            python-version: "3.11"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install package and test deps
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install . pytest
+      - name: Run tests against the installed package
+        run: python -m pytest tests -ra
+
+  types:
+    name: mypy --strict
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --upgrade mypy
+      - run: python -m mypy --strict src/safewrite
+
+  build:
+    name: Build and check distributions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --upgrade build twine
+      - run: python -m build
+      - run: python -m twine check --strict dist/*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: distributions
+          path: dist/

@@ -1,0 +1,61 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "safewrite"
+version = "0.1.0"
+description = "Atomic file writes: the content is replaced in full, or not replaced at all"
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Max Ibragimov", email = "max.ibragimow@gmail.com" }]
+keywords = ["atomic", "file", "write", "fsync", "durability", "crash-safe"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: System :: Filesystems",
+    "Topic :: Software Development :: Libraries",
+    "Typing :: Typed",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/max-ibragimow/safewrite"
+Changelog = "https://github.com/max-ibragimow/safewrite/releases"
+Issues = "https://github.com/max-ibragimow/safewrite/issues"
+
+[project.scripts]
+safewrite = "safewrite.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=7.4", "mypy>=1.8"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/safewrite"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src",
+    "tests",
+    "README.md",
+    "LICENSE",
+    "pyproject.toml",
+    "tox.ini",
+]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
